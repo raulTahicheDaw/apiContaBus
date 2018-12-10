@@ -21,16 +21,18 @@ class CreateTasksTable extends Migration
             $table->string('description');
             $table->string('status');
             $table->string('client');
-            $table->string('order');
-            $table->string('observations');
-            $table->string('enrollment');
+            $table->string('order_number');
+            $table->string('observations')->nullable();
+            $table->string('enrollment')->nullable();
             $table->integer('pax');
             $table->integer('user_id')->unsigned();
             $table->integer('task_type_id')->unsigned();
+            $table->integer('day_id')->nullable()->unsigned();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('task_type_id')->references('id')->on('task_types');
+            $table->foreign('day_id')->references('id')->on('days');
 
         });
     }

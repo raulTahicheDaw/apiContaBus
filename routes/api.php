@@ -17,13 +17,18 @@ use Illuminate\Http\Request;
     return $request->user();
 });*/
 
-Route::apiResource('users','UserController');
+Route::apiResource('users', 'UserController');
+Route::apiResource('users.days', 'UserDayController', ['only' => ['index']]);
+Route::apiResource('users.tasks', 'UserDayController', ['only' => ['index']]);
 
-Route::apiResource('task','TaskController');
+Route::apiResource('tasks', 'TaskController', ['only' => ['index', 'show']]);
 
-Route::apiResource('days','DayController');
+Route::apiResource('days', 'DayController', ['only' => ['index', 'show']]);
+Route::apiResource('days.tasks', 'DayTaskController', ['only' => ['index']]);
 
-Route::apiResource('task-types','TaskTypeController');
+Route::apiResource('task-types', 'TaskTypeController');
+Route::apiResource('task-types.tasks', 'TaskTypeTaskController', ['only' => ['index']]);
 
-Route::apiResource('companies','CompanyController');
+Route::apiResource('companies', 'CompanyController');
+Route::apiResource('companies.users', 'CompanyUserController', ['only' => ['index']]);
 

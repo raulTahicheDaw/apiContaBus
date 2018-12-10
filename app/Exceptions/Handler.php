@@ -2,11 +2,18 @@
 
 namespace App\Exceptions;
 
+use App\Traits\ApiResponse;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
+    use ApiResponse;
     /**
      * A list of the exception types that are not reported.
      *
@@ -29,7 +36,7 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param  \Exception $exception
      * @return void
      */
     public function report(Exception $exception)
@@ -40,12 +47,39 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception $exception
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+        if ($exception instanceof ValidationException) {
+            return $this->convertValidationExceptionToResponse($exception, $request
+            );
+        }
+        if ($exception instanceof ModelNotFoundException) {
+            return $this->errorResponse('Does not exists any instance with the speciefied id', 404);
+        }
+        if ($exception instanceof NotFoundHttpException) {
+            return $this->errorResponse('Does not exists any instance with the endpoint matching with that URL', 404);
+        }
+        if ($exception instanceof MethodNotAllowedHttpException) {
+            return $this->errorResponse('HTTP method does not match with any endpoint', $exception->getStatusCode());
+        }
+        if ($exception instanceof HttpException) {
+            return $this->errorResponse($exception->getMessage(), $exception->getStatusCode());
+        }
+
+        if (config('app.debug')) {
+            return parent::render($request, $exception);
+        }
+        return $this->errorResponse('Error Desconocido', 500);
+    }
+
+    protected function convertValidationExceptionToResponse(ValidationException $exception, $request)
+    {
+        $errors = $exception->validator->errors()->getMessages();
+
+        return $this->errorResponse($errors, 422);
     }
 }

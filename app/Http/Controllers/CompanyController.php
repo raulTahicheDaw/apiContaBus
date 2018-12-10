@@ -21,7 +21,7 @@ class CompanyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -37,7 +37,7 @@ class CompanyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Company  $company
+     * @param  \App\Company $company
      * @return \Illuminate\Http\Response
      */
     public function show(Company $company)
@@ -48,19 +48,43 @@ class CompanyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Company  $company
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Company $company
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Company $company)
     {
+        $data = $request->validate([
+            'name' => 'required|max:255',
+            'cif' => 'required|unique:companies|max:20',
+        ]);
+
+        if ($request->has('name')) {
+            $company->name = $request->name;
+        }
+        if ($request->has('cif')) {
+            $company->cif = $request->cif;
+        }
+        if ($request->has('telephone')) {
+            $company->telephone = $request->telephone;
+        }
+        if ($request->has('address')) {
+            $company->address = $request->address;
+        }
+        if (!$company->isDirty()) { //Si no ha cambiado nada
+            return $this->errorResponse('Por favor cambia al menos un valor', 422);
+        }
+
+        $company->save();
+
+        return $this->showOne($company);
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Company  $company
+     * @param  \App\Company $company
      * @return \Illuminate\Http\Response
      */
     public function destroy(Company $company)

@@ -3,26 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Task;
+use App\Day;
 use Illuminate\Http\Request;
 
-class TaskController extends Controller
+class DayTaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\Day $day
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Day $day)
     {
-        $tasks = Task::all();
+        $tasks = $day->tasks;
         return $this->showAll($tasks);
     }
-
-
-    public function show(Task $task)
-    {
-        return $this->showOne($task);
-    }
-
-
 }

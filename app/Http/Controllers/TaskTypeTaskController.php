@@ -2,28 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Task;
+use App\TaskType;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class TaskTypeTaskController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\TaskType  $taskType
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(TaskType $taskType)
     {
-        $users = User::all();
-        return $this->showAll($users);
+        $tasks = $taskType->tasks;
+        return $this->showAll($tasks);
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \App\TaskType  $taskType
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(TaskType $taskType)
     {
         //
     }
@@ -32,9 +35,10 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\TaskType  $taskType
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, TaskType $taskType)
     {
         //
     }
@@ -42,21 +46,23 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
+     * @param  \App\TaskType  $taskType
+     * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show(TaskType $taskType, Task $task)
     {
-        return $this->showOne($user);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\User  $user
+     * @param  \App\TaskType  $taskType
+     * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit(TaskType $taskType, Task $task)
     {
         //
     }
@@ -65,10 +71,11 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param  \App\TaskType  $taskType
+     * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(Request $request, TaskType $taskType, Task $task)
     {
         //
     }
@@ -76,12 +83,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User  $user
+     * @param  \App\TaskType  $taskType
+     * @param  \App\Task  $task
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(TaskType $taskType, Task $task)
     {
-        $user->delete();
-        return $this->showOne($user);
+        //
     }
 }
