@@ -55,7 +55,7 @@ class TaskTypeController extends Controller
     public function update(Request $request, TaskType $taskType)
     {
         $data = $request->validate([
-            'name' => 'required|max:45',
+            'name' => 'max:45',
             'description' => 'max:100',
         ]);
         if ($request->has('name')) {

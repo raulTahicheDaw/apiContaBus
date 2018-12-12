@@ -55,8 +55,8 @@ class CompanyController extends Controller
     public function update(Request $request, Company $company)
     {
         $data = $request->validate([
-            'name' => 'required|max:255',
-            'cif' => 'required|unique:companies|max:20',
+            'name' => 'max:255',
+            'cif' => 'unique:companies|max:20',
         ]);
 
         if ($request->has('name')) {
